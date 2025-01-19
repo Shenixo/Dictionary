@@ -1,0 +1,16 @@
+import { Box } from "@mui/material";
+import "./Navbar.css"
+import { RiBookLine } from "react-icons/ri";
+const Navbar = () => {
+  return (
+      <div className="navbar">
+          <Box display: "flex", alignItems: "center", justifyContent: "space-between",>
+              
+          <RiBookLine size={20} color="gray" />
+          </Box>
+          
+    </div>
+  )
+}
+
+export default Navbar

@@ -1,0 +1,74 @@
+/* eslint-disable react/prop-types */
+import React, { useState } from "react";
+import { TextField, InputAdornment } from "@mui/material";
+import { BiSearch } from "react-icons/bi";
+import axios from "axios";
+
+const SearchBar = () => {
+  const [word, setWord] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Handle user input
+  const handleUserInput = (e) => {
+    setWord(e.target.value);
+  };
+
+  // Handle search and fetch data
+  const handleSearch = async (word) => {
+    setIsLoading(true);
+    setError(null);  // Reset error state on new search
+    try {
+      const response = await axios.get(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+      );
+      setResult(response.data);  // Store the fetched data in state
+      setIsLoading(false);
+    } catch (err) {
+      setError("Error fetching data");
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <TextField
+        fullWidth
+        placeholder="Search..."
+        value={word}
+        onChange={handleUserInput}
+        sx={{
+          background: "#f4f4f4",
+          margin: "46px 0",
+          borderRadius: "1rem",
+          border: "none",
+          outline: "none",
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <BiSearch
+                sx={{ cursor: "pointer" }}
+                onClick={() => handleSearch(word)}
+                size={22}
+                style={{ color: "#D1A1D6" }}
+              />
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      {loading && <div>Loading...</div>}  {/* Display loading message */}
+      {error && <div>{error}</div>}  {/* Display error message */}
+      {result && (
+        <div>
+          <h3>Results:</h3>
+          <pre>{JSON.stringify(result, null, 2)}</pre> {/* Display fetched data */}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchBar;
